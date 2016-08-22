@@ -46,7 +46,6 @@ func NewPyramid(numberOfLevels int8) (*Pyramid, int) {
 }
 
 func (pyramid *Pyramid) checkTile(row, column int, levelKey int8) bool {
-	// Tile checking logic goes here
 	currentLevel := pyramid.tileLevels[levelKey]
 	tile := currentLevel[row][column]
 
@@ -58,7 +57,7 @@ func (pyramid *Pyramid) checkTile(row, column int, levelKey int8) bool {
 		}
 	}
 
-	return true
+	return isThresholdFulfilled(row, column, levelKey, pyramid)
 }
 
 func hasTilesAbove(row, column int, level int8, pyramid *Pyramid) bool {
@@ -66,7 +65,7 @@ func hasTilesAbove(row, column int, level int8, pyramid *Pyramid) bool {
 
 	for i := row; i > i-2; i-- {
 		for j := column; j > j-2; j-- {
-			if isPermittedIndex(i, level-1) && isPermittedIndex(j, level-1) {
+			if isPermittedCell(i, j, level-1) {
 				if levelAbove[i][j].taken == false {
 					return true
 				}
@@ -77,8 +76,34 @@ func hasTilesAbove(row, column int, level int8, pyramid *Pyramid) bool {
 	return false
 }
 
-func isPermittedIndex(index int, level int8) bool {
-	return index >= 0 && index < int(level)
+func isPermittedCell(row, column int, level int8) bool {
+	return (row >= 0 && row < int(level)) && (column >= 0 && column < int(level))
+}
+
+func isThresholdFulfilled(row, column int, level int8, pyramid *Pyramid) bool {
+	currentLevel := pyramid.tileLevels[level]
+	freeCellCount := int8(0)
+	modifiers := []int{-1, 1}
+
+	for _, modifier := range modifiers {
+		if isPermittedCell(row+modifier, column, level) {
+			if currentLevel[row+modifier][column].taken {
+				freeCellCount++
+			}
+		} else {
+			freeCellCount++
+		}
+
+		if isPermittedCell(row, column+modifier, level) {
+			if currentLevel[row][column+modifier].taken {
+				freeCellCount++
+			}
+		} else {
+			freeCellCount++
+		}
+	}
+
+	return freeCellCount >= pyramid.getNeighbourhoodThreshold()
 }
 
 func dequeue(collection *[]Tile) Tile {
