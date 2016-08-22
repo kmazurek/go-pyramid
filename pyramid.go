@@ -17,6 +17,10 @@ func (pyramid *Pyramid) GetAvailableTiles() []Tile {
 	return availableTiles
 }
 
+func (pyramid *Pyramid) getNeighbourhoodThreshold() int8 {
+	return int8(2)
+}
+
 func NewPyramid(numberOfLevels int8) (*Pyramid, int) {
 	result := new(Pyramid)
 	tileCounter := 0
