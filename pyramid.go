@@ -6,7 +6,7 @@ type Tile struct {
 }
 
 type Pyramid struct {
-	tileLevels map[int][][]*Tile
+	tileLevels map[int8][][]*Tile
 }
 
 func (pyramid *Pyramid) GetAvailableTiles() []Tile {
@@ -16,13 +16,13 @@ func (pyramid *Pyramid) GetAvailableTiles() []Tile {
 	return availableTiles
 }
 
-func NewPyramid(numberOfLevels int) (*Pyramid, int) {
+func NewPyramid(numberOfLevels int8) (*Pyramid, int) {
 	result := new(Pyramid)
 	tileCounter := 0
 
-	result.tileLevels = make(map[int][][]*Tile)
+	result.tileLevels = make(map[int8][][]*Tile)
 
-	for i := 1; i <= numberOfLevels; i++ {
+	for int8 i = 1; i <= numberOfLevels; i++ {
 		result.tileLevels[i] = make([][]*Tile, i, i)
 		currentLevel := result.tileLevels[i]
 
@@ -39,7 +39,7 @@ func NewPyramid(numberOfLevels int) (*Pyramid, int) {
 	return result, tileCounter
 }
 
-func checkTile(tile Tile) bool {
+func checkTile(tile Tile, level int8) bool {
 	// Tile checking logic goes here
 	return true
 }
