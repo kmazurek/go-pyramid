@@ -13,6 +13,15 @@ type Pyramid struct {
 func (pyramid *Pyramid) GetAvailableTiles() []Tile {
 	var availableTiles []Tile
 	// calls checkTile and fills in availableTiles
+	for level, tiles := range pyramid.tileLevels {
+		for i := 0; i < int(level); i++ {
+			for j := 0; j < int(level); j++ {
+				if pyramid.checkTile(i, j, level) {
+					availableTiles = append(availableTiles, *(tiles[i][j]))
+				}
+			}
+		}
+	}
 
 	return availableTiles
 }
@@ -63,8 +72,8 @@ func (pyramid *Pyramid) checkTile(row, column int, levelKey int8) bool {
 func hasTilesAbove(row, column int, level int8, pyramid *Pyramid) bool {
 	levelAbove := pyramid.tileLevels[level-1]
 
-	for i := row; i > i-2; i-- {
-		for j := column; j > j-2; j-- {
+	for i := row; i >= row-1; i-- {
+		for j := column; j >= column-1; j-- {
 			if isPermittedCell(i, j, level-1) {
 				if levelAbove[i][j].taken == false {
 					return true
