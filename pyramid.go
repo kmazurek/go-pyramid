@@ -60,10 +60,10 @@ func (pyramid *Pyramid) checkTile(row, column int, levelKey int8) bool {
 
 	if levelKey == 1 {
 		return !tile.taken
-	} else {
-		if hasTilesAbove(row, column, levelKey, pyramid) {
-			return false
-		}
+	}
+
+	if hasTilesAbove(row, column, levelKey, pyramid) {
+		return false
 	}
 
 	return isThresholdFulfilled(row, column, levelKey, pyramid)
